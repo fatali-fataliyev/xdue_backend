@@ -3,15 +3,23 @@ DROP TABLE
 
 
 DROP TABLE
-  IF EXISTS "dev";
-
-
-DROP TABLE
   IF EXISTS "feedbacks";
 
 
 DROP TABLE
   IF EXISTS "dev_session";
+
+
+DROP TABLE
+  IF EXISTS "dev";
+
+
+DROP TABLE
+  IF EXISTS "sessions";
+
+
+DROP TABLE
+  IF EXISTS "group_members";
 
 
 DROP TABLE
@@ -23,6 +31,10 @@ DROP TABLE
 
 
 DROP TABLE
+  IF EXISTS "settle_ups";
+
+
+DROP TABLE
   IF EXISTS "expenses";
 
 
@@ -31,15 +43,11 @@ DROP TABLE
 
 
 DROP TABLE
-  IF EXISTS "sessions";
-
-
-DROP TABLE
-  IF EXISTS "members";
-
-
-DROP TABLE
   IF EXISTS "pending_members";
+
+
+DROP TABLE
+  IF EXISTS "deleted_expenses";
 
 
 DROP TABLE
@@ -47,4 +55,4 @@ DROP TABLE
 
 
 DROP TABLE
-  IF EXISTS "deleted_expenses";
+  IF EXISTS "users";
