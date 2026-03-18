@@ -28,6 +28,53 @@ func NewPostgresDB(dataSouceName string) (*PostgreDB, error) {
 	return &PostgreDB{db}, nil
 }
 
+type StorageRepository interface {
+	CreateUser(u *User) error
+	CreateUserSession(s *Session, id uuid.UUID) error
+	GetUser(id uuid.UUID) (User, error)
+	GetUserByEmail(email string) error
+	IsEmailTaken(email string) (bool, error)
+	UpdateUser(newName string, id uuid.UUID) error
+	DeleteUser(id uuid.UUID) error
+	GetUserSessionByToken(token string) (Session, error)
+	ExtendUserSession(id uuid.UUID) error
+	RevokeUserSession(token string, id uuid.UUID) error
+	RevokeUserSessions(id uuid.UUID) error
+	CreateGroup(g *Group) error
+	GetGroup(userId uuid.UUID, groupId uuid.UUID) (Group, error)
+	GetGroups(userId uuid.UUID) ([]Group, error)
+	UpdateGroup(g *Group) error
+	DeleteGroup(g *Group) error
+	AddMemberToGroup(m *GroupMember) error
+	GetGroupMembersIDs(groupId uuid.UUID) ([]uuid.UUID, error)
+	DeleteGroupMember(groupId uuid.UUID, userId uuid.UUID) error
+	SendPendingRequest(pm *PendingMember) error
+	RemovePendingRequest(id uuid.UUID) error
+	IsGroupExist(id uuid.UUID) (bool, error)
+	CreateExpense(e *Expense) error
+	GetExpense(userId uuid.UUID, expId uuid.UUID) (Expense, error)
+	GetExpenses(userId uuid.UUID) ([]Expense, error)
+	UpdateExpense(e *Expense) error
+	DeleteExpense(userId uuid.UUID, expId uuid.UUID) error
+	AddExpensePayment(e *ExpensePayment) error
+	GetExpensePayment(expId uuid.UUID, userId uuid.UUID) (ExpensePayment, error)
+	UpdateExpensePayment(ep *ExpensePayment) error
+	AddExpenseSplit(es *ExpenseSplit) error
+	GetExpenseSplit(expId uuid.UUID, groupId uuid.UUID, userId uuid.UUID) (ExpenseSplit, error)
+	UpdateExpenseSplit(es *ExpenseSplit) error
+	AddSettleUp(su *SettleUp) error
+	GetSettleUp(expId uuid.UUID, userId uuid.UUID) (SettleUp, error)
+	GetSettleUps(expId uuid.UUID) ([]SettleUp, error)
+	AddNotification(n *Notification) error
+	MarkAsReadNotification(id uuid.UUID) error
+	DeleteUserNotifications(id uuid.UUID) error
+	GetDev(id uuid.UUID) (Dev, error)
+	GetDevIDBySession(token string) (uuid.UUID, error)
+	UpdatePrivacyPolicy(content string) error
+	StatUsersCount() (int, error)
+	StatsExpensesCount() (int, error)
+}
+
 type PostgreDB struct {
 	*sqlx.DB
 }
@@ -47,7 +94,7 @@ func (db *PostgreDB) CreateUser(u *User) error {
 	return nil
 }
 
-func (db *PostgreDB) CreateUserSession(s Session, id uuid.UUID) error {
+func (db *PostgreDB) CreateUserSession(s *Session, id uuid.UUID) error {
 	if _, err := db.Exec(`INSERT INTO sessions VALUES ($1, $2, $3, $4)`,
 		s.ID,
 		s.Token,
